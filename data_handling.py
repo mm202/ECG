@@ -95,7 +95,7 @@ class DataHandling:
   def searchType(self, xds, yds, Numb, sym='N'):
     """ Search for cutted signal with a patricular type"""
     indexes = [i for i,item in enumerate(yds) if item==sym]
-    return xds[indexes[Numb]]
+    return xds[indexes[Numb]],indexes
 
   def reportStats(self, xds, yds):
     """ """

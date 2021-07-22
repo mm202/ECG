@@ -1,6 +1,7 @@
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, classification_report
 import matplotlib.pylab as pylab
 import pandas as pd
+import numpy as np
 
 class Reports:
   '''
@@ -14,7 +15,9 @@ class Reports:
   def confusionMatrix(self, normalize=None):
     return confusion_matrix(self.yTrue, self.yPred, normalize=normalize)
 
-  def plotConfusionMatrix(self):
+
+
+  def plotConfusionMatrix(self, normalize=None, cmap='Blues', values_format='.2%'):
     #print(pylab.rcParams)
     params = {'legend.fontsize': 4,
               'figure.figsize': (4, 4),
@@ -28,9 +31,11 @@ class Reports:
     pylab.rcParams.update(params)
     if not self.labels: 
       print('Labels are not provided!')
-    cm = self.confusionMatrix()
-    disp = ConfusionMatrixDisplay(confusion_matrix = cm, display_labels=self.labels)
-    disp.plot()
+    cm = self.confusionMatrix(normalize=normalize)
+    disp = ConfusionMatrixDisplay(confusion_matrix = cm, display_labels=sorted(self.labels))
+    disp.plot(include_values=True, cmap=cmap, values_format=values_format)
+
+
 
   def classificationReport(self, digits=4):
     report=classification_report(self.yTrue, self.yPred, digits=digits)
@@ -44,17 +49,17 @@ class Reports:
     TP = np.diag(cfm)
     TN = cfm.sum() - (FP + FN + TP)
 
-    TPR = TP/(TP+FN) # Sensitivity, recall
-    TNR = TN/(TN+FP) # Specificity, true negative rate
-    PPV = TP/(TP+FP) # Precision, positive predictive value (PPV)
-    NPV = TN/(TN+FN)  # Negative predictive value
-    FPR = FP/(FP+TN)  # False positive rate
-    FNR = FN/(TP+FN)  # False negative rate
-    ACC = (TP+TN)/(TP+FP+FN+TN)  # Accuracy of each class
+    TPR = TP/(TP+FN)*100 # Sensitivity, recall
+    TNR = TN/(TN+FP)*100 # Specificity, true negative rate
+    PPV = TP/(TP+FP)*100 # Precision, positive predictive value (PPV)
+    NPV = TN/(TN+FN)*100  # Negative predictive value
+    FPR = FP/(FP+TN)*100  # False positive rate
+    FNR = FN/(TP+FN)*100  # False negative rate
+    ACC = (TP+TN)/(TP+FP+FN+TN)*100  # Accuracy of each class
     out = {'Class':sorted(self.labels),'(PPV)Precision':PPV,'(Sensitivity)Recall':TPR,'Specificity':TNR,'Accuracy':ACC}
     return out
 
   def metricsTable(self):
     mt = self.metrics()
-    df = pd.DataFrame(mt)
+    df = pd.DataFrame(mt).round(2)
     return df

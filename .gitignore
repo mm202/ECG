@@ -1,0 +1,6 @@
+model*.py
+*.dat
+*.history
+*.txt
+checkpoint/
+__pycache__/
