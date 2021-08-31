@@ -63,3 +63,13 @@ class Reports:
     mt = self.metrics()
     df = pd.DataFrame(mt).round(2)
     return df
+
+
+'''
+ from sklearn.metrics import confusion_matrix
+np.set_printoptions(suppress=True, formatter={'float_kind':'{:.2f}'.format})
+cfm=confusion_matrix(y_true_AAMI, y_pred_AAMI, labels=sorted(labels_AAMI),normalize='true')*100
+cfm
+import pandas as pd
+pd.DataFrame(cfm).round(2)
+'''   

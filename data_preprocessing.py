@@ -12,13 +12,22 @@ class DataPreprocessing:
       nperseg=64
     if noverlap == None:
       noverlap = int(nperseg/2)
+    list_all=[]
     for i in tqdm(range(len(signals))):
       f,t,Sxx= signal.spectrogram(signals[i], fs=Fs, nperseg=nperseg, noverlap=noverlap, mode='psd')
-      arr = Sxx.T[np.newaxis,:,:]
+      #arr = Sxx.T[np.newaxis,:,:]
+      #print(Sxx.T[:,:].tolist())
+      list_all.append(Sxx.T[:,:].tolist())
+      #print((list_all))
+      '''
       if i == 0:
         out = arr
       else:
-        out = np.append(out, arr, axis=0)
-      i +=1
+        pass
+        #out = np.append(out, arr, axis=0)
+        out[i,:,:]=arr
+      '''
+      #i +=1
+    out = np.array(list_all)
     return out
   
